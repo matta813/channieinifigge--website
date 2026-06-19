@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t channieinifigge-website .
+
+      - name: Deploy with Docker Compose
+        run: docker compose up -d --build
