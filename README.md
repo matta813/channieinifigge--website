@@ -2,6 +2,17 @@
 
 Lo-Fi-Stream-Seite (YouTube-Embed), ausgeliefert von nginx.
 
+## Struktur
+
+| Datei            | Zweck                                                |
+| ---------------- | ----------------------------------------------------- |
+| `index.html`     | Die Seite                                             |
+| `style.css`      | Styles (extern, damit CSP ohne `unsafe-inline` geht)  |
+| `main.js`        | YouTube-IFrame-API-Einbindung (extern, s.o.)          |
+| `default.conf`   | nginx-Config: Security-Header, CSP, Favicon-Alias     |
+| `favicon.svg`    | Favicon (auch unter `/favicon.ico` ausgeliefert)      |
+| `robots.txt`     | Crawler-Freigabe                                      |
+
 ## Lokal ausführen
 
 ```sh
