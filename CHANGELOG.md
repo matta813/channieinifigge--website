@@ -1,3 +1,9 @@
+## [1.1.1](https://gitlab.scruzzi.com/root/channieinifigge-website/compare/v1.1.0...v1.1.1) (2026-07-27)
+
+### Bug Fixes
+
+* duplicate self-renovate job instead of cross-project include ([9e1de65](https://gitlab.scruzzi.com/root/channieinifigge-website/commit/9e1de65177390677d59e217324a39040418ca593))
+
 ## [1.1.0](https://gitlab.scruzzi.com/root/channieinifigge-website/compare/v1.0.0...v1.1.0) (2026-07-27)
 
 ### Features
