@@ -41,9 +41,16 @@
 #                 CHANGELOG-Commit) UND für self-renovate (MRs).
 
 include:
+  # Skipped on schedule pipelines: GitLab resolves includes at compile
+  # time regardless of job-level rules, and this repo's schedule bot
+  # has no read access to root/scruzzi-website, which would otherwise
+  # fail the whole pipeline before any job (including self-renovate) is
+  # created.
   - project: 'root/scruzzi-website'
     ref: main
     file: '.gitlab/ci-templates/release-and-build.yml'
+    rules:
+      - if: '$CI_PIPELINE_SOURCE != "schedule"'
 
 stages:
   - test
