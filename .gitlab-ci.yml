@@ -13,10 +13,17 @@
 #                :X.Y.Z (Deployment-Tag), :sha-<commit> (Nachvollzieh-
 #                barkeit) und :latest (nur für docker-compose/Fallback —
 #                das Cluster-Deployment nutzt den Versions-Tag).
+#   4. renovate  Läuft NICHT bei normalen Pushes, sondern nur über einen
+#                GitLab Pipeline Schedule (Settings → CI/CD → Schedules).
+#                Aktualisiert Dockerfile-Digest und die in .gitlab-ci.yml
+#                gepinnten Tool-Versionen (commitlint) per MR. Eigenständig
+#                vom cluster-weiten Renovate im GitOps-Repo, das nur
+#                apps-flux/*.yaml-Image-Tags beobachtet und nie in dieses
+#                Repo hineinschaut.
 #
-# release + build-and-push kommen aus dem gemeinsamen Template in
-# root/scruzzi-website: .gitlab/ci-templates/release-and-build.yml
-# (dort auch lokal genutzt, um Duplikation zu vermeiden).
+# release + build-and-push + self-renovate kommen aus dem gemeinsamen
+# Template in root/scruzzi-website: .gitlab/ci-templates/ (dort auch
+# lokal genutzt, um Duplikation zu vermeiden).
 #
 # Ausrollen: Renovate (läuft stündlich im Cluster) erkennt den neuen
 # Registry-Tag und erstellt im GitOps-Repo einen MR, der den Versions-Tag
@@ -27,17 +34,20 @@
 # Secrets im Repo):
 #   GITLAB_TOKEN  Project Access Token DIESES Repos (Scopes: api,
 #                 write_repository) — für semantic-release (Tag, Release,
-#                 CHANGELOG-Commit).
+#                 CHANGELOG-Commit) UND für self-renovate (MRs).
 
 include:
   - project: 'root/scruzzi-website'
     ref: main
-    file: '.gitlab/ci-templates/release-and-build.yml'
+    file:
+      - '.gitlab/ci-templates/release-and-build.yml'
+      - '.gitlab/ci-templates/self-renovate.yml'
 
 stages:
   - test
   - release
   - build
+  - renovate
 
 workflow:
   rules:
@@ -49,6 +59,10 @@ workflow:
 lint-nginx-conf:
   stage: test
   image: nginx:stable-alpine
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - when: on_success
   script:
     - cp default.conf /etc/nginx/conf.d/default.conf
     - nginx -t
@@ -56,6 +70,10 @@ lint-nginx-conf:
 commitlint:
   stage: test
   image: node:22-alpine
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - when: on_success
   before_script:
     - apk add --no-cache git
   script:
