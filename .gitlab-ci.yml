@@ -1,16 +1,22 @@
-# CI/CD-Flow (Commit → Version-Bump → Image-Build → Renovate → GitOps):
+# CI/CD-Flow (Commit → Lint/Commitlint → Version-Bump → Image-Build → Renovate → GitOps):
 #
-#   1. release   semantic-release analysiert die Conventional Commits auf
+#   1. test      `nginx -t` gegen default.conf (fängt Config-Fehler ab,
+#                bevor sie im Image landen) und Commitlint.
+#   2. release   semantic-release analysiert die Conventional Commits auf
 #                main (feat: → minor, fix: → patch, BREAKING CHANGE →
 #                major), bestimmt die nächste SemVer-Version, schreibt
 #                CHANGELOG.md zurück ins Repo ([skip ci]), setzt den
 #                Git-Tag vX.Y.Z und erstellt ein GitLab-Release.
 #                Gibt es keine release-würdigen Commits (nur chore/docs/
 #                ci/…), endet die Pipeline hier ohne Build.
-#   2. build     Kaniko baut das Image und pusht es in die Registry als
+#   3. build     Kaniko baut das Image und pusht es in die Registry als
 #                :X.Y.Z (Deployment-Tag), :sha-<commit> (Nachvollzieh-
 #                barkeit) und :latest (nur für docker-compose/Fallback —
 #                das Cluster-Deployment nutzt den Versions-Tag).
+#
+# release + build-and-push kommen aus dem gemeinsamen Template in
+# root/scruzzi-website: .gitlab/ci-templates/release-and-build.yml
+# (dort auch lokal genutzt, um Duplikation zu vermeiden).
 #
 # Ausrollen: Renovate (läuft stündlich im Cluster) erkennt den neuen
 # Registry-Tag und erstellt im GitOps-Repo einen MR, der den Versions-Tag
@@ -23,7 +29,13 @@
 #                 write_repository) — für semantic-release (Tag, Release,
 #                 CHANGELOG-Commit).
 
+include:
+  - project: 'root/scruzzi-website'
+    ref: main
+    file: '.gitlab/ci-templates/release-and-build.yml'
+
 stages:
+  - test
   - release
   - build
 
@@ -34,43 +46,23 @@ workflow:
       when: never
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
-release:
-  stage: release
+lint-nginx-conf:
+  stage: test
+  image: nginx:stable-alpine
+  script:
+    - cp default.conf /etc/nginx/conf.d/default.conf
+    - nginx -t
+
+commitlint:
+  stage: test
   image: node:22-alpine
   before_script:
     - apk add --no-cache git
   script:
-    - npx --yes
-      -p semantic-release@24.2.9
-      -p @semantic-release/changelog@6.0.3
-      -p @semantic-release/exec@7.1.0
-      -p @semantic-release/git@10.0.1
-      -p @semantic-release/gitlab@13.3.3
-      -p conventional-changelog-conventionalcommits@8.0.0
-      semantic-release
-    # Ohne neue Version bleibt release.env leer → build/deploy überspringen sich selbst
-    - test -f release.env || echo "RELEASE_VERSION=" > release.env
-  artifacts:
-    reports:
-      dotenv: release.env
-
-build-and-push:
-  stage: build
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  before_script:
-    - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf '%s:%s' "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-  script:
+    - FROM_SHA="${CI_COMMIT_BEFORE_SHA}"
     - |
-      if [ -z "${RELEASE_VERSION}" ]; then
-        echo "Keine neue Version durch semantic-release — Build übersprungen."
-        exit 0
+      if [ -z "$FROM_SHA" ] || [ "$FROM_SHA" = "0000000000000000000000000000000000000000" ]; then
+        FROM_SHA="HEAD~1"
       fi
-    - /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "${CI_REGISTRY_IMAGE}:${RELEASE_VERSION}"
-      --destination "${CI_REGISTRY_IMAGE}:sha-${CI_COMMIT_SHORT_SHA}"
-      --destination "${CI_REGISTRY_IMAGE}:latest"
+    - npx --yes -p @commitlint/cli@21.2.1 -p @commitlint/config-conventional@21.2.0
+      commitlint --from "$FROM_SHA" --to "$CI_COMMIT_SHA"
