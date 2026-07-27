@@ -1,3 +1,9 @@
+## [1.1.2](https://gitlab.scruzzi.com/root/channieinifigge-website/compare/v1.1.1...v1.1.2) (2026-07-27)
+
+### Bug Fixes
+
+* skip cross-project include on schedule pipelines ([184d76f](https://gitlab.scruzzi.com/root/channieinifigge-website/commit/184d76fc7999b45395b6fae59ec4060f9ce6d436))
+
 ## [1.1.1](https://gitlab.scruzzi.com/root/channieinifigge-website/compare/v1.1.0...v1.1.1) (2026-07-27)
 
 ### Bug Fixes
