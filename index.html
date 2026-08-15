@@ -4,16 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lo-Fi Stream</title>
+    <meta name="description" content="Ein ruhiger Lo-Fi-Stream zum Lernen, Arbeiten und Entspannen.">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#000000">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Lo-Fi Stream">
+    <meta property="og:description" content="Lo-Fi-Musik zum Lernen, Arbeiten und Entspannen.">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
-    <div id="hint" class="click-hint">Einmal klicken für Sound 🔊</div>
+    <main>
+        <h1 class="visually-hidden">Lo-Fi Stream</h1>
+        <div class="consent" id="consent" aria-live="polite">
+            <p>Der Stream wird von YouTube eingebettet. Erst nach deiner Zustimmung wird eine Verbindung zu YouTube hergestellt.</p>
+            <button id="start-stream" type="button">Stream mit Ton starten 🔊</button>
+        </div>
 
-    <div class="video-foreground">
-        <div id="player"></div>
-    </div>
+        <div class="video-foreground">
+            <div id="player"></div>
+        </div>
+        <noscript>Für den Stream muss JavaScript aktiviert sein.</noscript>
+    </main>
 
     <script src="/main.js"></script>
 </body>

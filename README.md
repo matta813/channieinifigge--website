@@ -8,7 +8,7 @@ Lo-Fi-Stream-Seite (YouTube-Embed), ausgeliefert von nginx.
 | ---------------- | ----------------------------------------------------- |
 | `index.html`     | Die Seite                                             |
 | `style.css`      | Styles (extern, damit CSP ohne `unsafe-inline` geht)  |
-| `main.js`        | YouTube-IFrame-API-Einbindung (extern, s.o.)          |
+| `main.js`        | Zustimmungsbasierte YouTube-IFrame-API-Einbindung     |
 | `default.conf`   | nginx-Config: Security-Header, CSP, Favicon-Alias     |
 | `favicon.svg`    | Favicon (auch unter `/favicon.ico` ausgeliefert)      |
 | `robots.txt`     | Crawler-Freigabe                                      |
@@ -22,19 +22,20 @@ docker compose up --build
 
 ## Release & Deployment
 
-Der komplette Flow läuft automatisch bei jedem Push auf `main`
-(Details und benötigte CI-Variablen: Kommentar-Block in `.gitlab-ci.yml`):
+GitHub Actions prüft JavaScript, HTML-Metadaten, Security-Header und das
+fertige nginx-Image. Der Release-Flow läuft bei Pushes auf `main`:
 
 ```
 Commit (Conventional Commits)
-  → semantic-release: SemVer-Bump, CHANGELOG.md, Git-Tag vX.Y.Z, GitLab-Release
-  → Kaniko: Image-Build & Push  (:X.Y.Z, :sha-<commit>, :latest)
-  → Renovate (stündlich): erkennt den neuen Tag, MR im GitOps-Repo,
-    Patch-Updates automerged
+  → Tests + Commitlint + CodeQL
+  → semantic-release: SemVer-Bump, CHANGELOG.md, Tag und GitHub Release
+  → Buildx: Image-Build und Push nach GHCR (:X.Y.Z, :sha-<commit>, :latest)
+  → Dependabot: wöchentliche Updates für Actions, Docker und npm
   → FluxCD rollt die neue Version im Cluster aus
 ```
 
 - **Versionierung:** `fix:` → Patch, `feat:` → Minor,
   `BREAKING CHANGE:` → Major. Commits wie `chore:`/`docs:`/`ci:` lösen
-  kein Release (und damit keinen Build) aus.
-- **Runtime:** Container lauscht auf Port **80** (nginx).
+  kein Release aus. `chore(deps):` erzeugt für ausgerollte
+  Abhängigkeitsupdates automatisch einen Patch-Release.
+- **Runtime:** Der unprivilegierte Container lauscht auf Port **8080** (nginx).

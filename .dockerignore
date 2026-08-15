@@ -1,6 +1,10 @@
 .git
-.gitlab-ci.yml
+.github
 .releaserc.json
 CHANGELOG.md
 README.md
 docker-compose.yml
+node_modules
+package-lock.json
+package.json
+tests
