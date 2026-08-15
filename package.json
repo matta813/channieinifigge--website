@@ -4,17 +4,10 @@
   "scripts": {
     "check": "node --check main.js",
     "commitlint": "commitlint",
-    "release": "semantic-release",
     "test": "node --test tests/*.test.js"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.2",
-    "@commitlint/config-conventional": "21.2.2",
-    "@semantic-release/changelog": "7.0.0",
-    "@semantic-release/exec": "7.1.0",
-    "@semantic-release/git": "11.0.1",
-    "@semantic-release/github": "12.0.9",
-    "conventional-changelog-conventionalcommits": "10.3.0",
-    "semantic-release": "25.0.9"
+    "@commitlint/config-conventional": "21.2.2"
   }
 }

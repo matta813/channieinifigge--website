@@ -43,11 +43,6 @@ updates:
     labels:
       - dependencies
       - javascript
-    # These are bundled by npm through semantic-release and cannot be
-    # updated independently. Keep semantic-release itself updated instead.
-    ignore:
-      - dependency-name: ip-address
-      - dependency-name: undici
     groups:
       node-dev-tools:
         patterns:

@@ -28,8 +28,9 @@ fertige nginx-Image. Der Release-Flow läuft bei Pushes auf `main`:
 ```
 Commit (Conventional Commits)
   → Tests + Commitlint + CodeQL
-  → semantic-release: SemVer-Bump, CHANGELOG.md, Tag und GitHub Release
-  → Buildx: Image-Build und Push nach GHCR (:X.Y.Z, :sha-<commit>, :latest)
+  → isoliertes semantic-release: SemVer-Bump, CHANGELOG, Tag und Release
+  → Trivy: Image-Scan auf hohe und kritische Schwachstellen
+  → Buildx: GHCR-Image mit SBOM und Provenance
   → Dependabot: wöchentliche Updates für Actions, Docker und npm
   → FluxCD rollt die neue Version im Cluster aus
 ```
@@ -39,3 +40,7 @@ Commit (Conventional Commits)
   kein Release aus. `chore(deps):` erzeugt für ausgerollte
   Abhängigkeitsupdates automatisch einen Patch-Release.
 - **Runtime:** Der unprivilegierte Container lauscht auf Port **8080** (nginx).
+- **Betrieb und Rollback:** siehe [OPERATIONS.md](OPERATIONS.md).
+- **Verfügbarkeit:** Der manuelle GitHub-Actions-Workflow nimmt die
+  Produktions-URL als Eingabe; eine feste öffentliche Domain ist im
+  Repository derzeit nicht hinterlegt.
