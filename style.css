@@ -5,7 +5,7 @@ body, html {
     height: 100%;
     overflow: hidden;
     background-color: #000;
-    cursor: pointer;
+    font-family: system-ui, sans-serif;
 }
 
 .video-foreground {
@@ -28,17 +28,60 @@ body, html {
     transform: translate(-50%, -50%);
 }
 
-.click-hint {
+.consent {
     position: fixed;
-    top: 20px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     color: white;
-    font-family: sans-serif;
-    background: rgba(0,0,0,0.6);
-    padding: 10px 20px;
-    border-radius: 20px;
+    width: min(90vw, 34rem);
+    box-sizing: border-box;
+    text-align: center;
+    background: rgba(0,0,0,0.85);
+    padding: 1.5rem;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 1rem;
     z-index: 100;
-    pointer-events: none;
     transition: opacity 0.5s ease;
+}
+
+.consent p {
+    line-height: 1.5;
+    margin: 0 0 1rem;
+}
+
+.consent button {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.75rem 1.25rem;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.consent button:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 4px;
+}
+
+.consent.is-loading {
+    pointer-events: none;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .consent {
+        transition: none;
+    }
 }
