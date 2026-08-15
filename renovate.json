@@ -4,7 +4,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^\\.gitlab-ci\\.yml$/"],
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.yml$/"],
       "matchStrings": ["-p (?<depName>[^@\\s]+)@(?<currentValue>[\\d.]+)\\b"],
       "datasourceTemplate": "npm"
     }
