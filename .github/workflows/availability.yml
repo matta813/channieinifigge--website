@@ -1,0 +1,33 @@
+name: Availability
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Public production URL to verify
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: availability-channieinifigge
+  cancel-in-progress: true
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify page and security headers
+        env:
+          TARGET_URL: ${{ inputs.url }}
+        run: |
+          headers=$(mktemp)
+          trap 'rm -f "$headers"' EXIT
+          curl --fail --location --retry 3 --retry-all-errors \
+            --connect-timeout 10 --max-time 30 \
+            --dump-header "$headers" --output /dev/null "$TARGET_URL"
+          grep -qi '^strict-transport-security:' "$headers"
+          grep -qi '^content-security-policy:' "$headers"
+          grep -qi '^x-content-type-options: nosniff' "$headers"
