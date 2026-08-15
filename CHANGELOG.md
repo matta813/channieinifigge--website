@@ -1,3 +1,5 @@
+## [1.1.3](https://github.com/matta813/channieinifigge--website/compare/v1.1.2...v1.1.3) (2026-08-15)
+
 ## [1.1.2](https://gitlab.scruzzi.com/root/channieinifigge-website/compare/v1.1.1...v1.1.2) (2026-07-27)
 
 ### Bug Fixes
