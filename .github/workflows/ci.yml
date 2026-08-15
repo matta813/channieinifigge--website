@@ -5,8 +5,6 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  schedule:
-    - cron: "43 3 * * *"
   workflow_dispatch:
 
 permissions:
@@ -97,19 +95,3 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ needs.release.outputs.version }}
             ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
-
-  renovate:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-    steps:
-      - uses: renovatebot/github-action@v43.0.14
-        with:
-          configurationFile: renovate.json
-          token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          RENOVATE_REPOSITORIES: ${{ github.repository }}
-          RENOVATE_AUTODISCOVER: "false"
