@@ -25,7 +25,7 @@ jobs:
         run: |
           headers=$(mktemp)
           trap 'rm -f "$headers"' EXIT
-          curl --fail --location --retry 3 --retry-all-errors \
+          curl --ipv4 --fail --location --retry 3 --retry-all-errors \
             --connect-timeout 10 --max-time 30 \
             --dump-header "$headers" --output /dev/null "$TARGET_URL"
           grep -qi '^strict-transport-security:' "$headers"
