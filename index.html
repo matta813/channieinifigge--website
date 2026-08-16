@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lo-Fi Stream</title>
     <meta name="description" content="Ein ruhiger Lo-Fi-Stream zum Lernen, Arbeiten und Entspannen.">
+    <meta name="robots" content="index,follow">
     <meta name="color-scheme" content="dark">
     <meta name="theme-color" content="#000000">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Lo-Fi Stream">
     <meta property="og:description" content="Lo-Fi-Musik zum Lernen, Arbeiten und Entspannen.">
+    <meta property="og:url" content="https://channieinifigge.uk/">
+    <meta property="og:image" content="https://channieinifigge.uk/social-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Ruhiger Lo-Fi-Arbeitsplatz bei Nacht">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lo-Fi Stream">
+    <meta name="twitter:description" content="Lo-Fi-Musik zum Lernen, Arbeiten und Entspannen.">
+    <meta name="twitter:image" content="https://channieinifigge.uk/social-preview.png">
+    <link rel="canonical" href="https://channieinifigge.uk/">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/style.css">
 </head>
@@ -18,8 +29,8 @@
     <main>
         <h1 class="visually-hidden">Lo-Fi Stream</h1>
         <div class="consent" id="consent" aria-live="polite">
-            <p>Der Stream wird von YouTube eingebettet. Erst nach deiner Zustimmung wird eine Verbindung zu YouTube hergestellt.</p>
-            <button id="start-stream" type="button">Stream mit Ton starten 🔊</button>
+            <p id="status-message">Der Stream wird von YouTube eingebettet. Erst nach deiner Zustimmung wird eine Verbindung zu YouTube hergestellt.</p>
+            <button id="start-stream" type="button" aria-describedby="status-message">Stream mit Ton starten 🔊</button>
         </div>
 
         <div class="video-foreground">

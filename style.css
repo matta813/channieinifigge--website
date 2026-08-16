@@ -68,6 +68,10 @@ body, html {
     pointer-events: none;
 }
 
+.consent.is-error {
+    border-color: #d98b65;
+}
+
 .visually-hidden {
     position: absolute;
     width: 1px;
