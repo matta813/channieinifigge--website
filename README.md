@@ -45,5 +45,6 @@ Commit (Conventional Commits)
 - **Architekturen:** veröffentlichte Images unterstützen `linux/amd64` und
   `linux/arm64`; beide Varianten werden vor dem Push separat gescannt.
 - **Betrieb und Rollback:** siehe [OPERATIONS.md](OPERATIONS.md).
-- **Verfügbarkeit:** GitHub Actions prüft die Produktionsseite alle sechs
-  Stunden sowie bei manueller Ausführung.
+- **Verfügbarkeit:** Der manuelle GitHub-Actions-Workflow kann die
+  Produktionsseite prüfen. Automatische GitHub-hosted Checks sind wegen der
+  absichtlichen Regionssperre nicht aktiviert.
