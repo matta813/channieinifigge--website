@@ -11,8 +11,9 @@ geprüft. SBOM und Build-Provenance werden zusammen mit dem Image publiziert.
 ## Überprüfung
 
 - Der Container muss auf Port 8080 mit HTTP 200 antworten.
-- Der Workflow `Availability` prüft `https://channieinifigge.uk/` alle
-  sechs Stunden sowie bei manueller Ausführung.
+- Der Workflow `Availability` kann `https://channieinifigge.uk/` manuell
+  prüfen. GitHub-hosted Runner können durch die absichtliche Regionssperre
+  HTTP 403 erhalten; deshalb ist kein automatischer Zeitplan aktiviert.
 
 ## Rollback
 
