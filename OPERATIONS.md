@@ -11,10 +11,8 @@ geprüft. SBOM und Build-Provenance werden zusammen mit dem Image publiziert.
 ## Überprüfung
 
 - Der Container muss auf Port 8080 mit HTTP 200 antworten.
-- Der manuelle Workflow `Availability` nimmt die öffentliche Produktions-URL
-  als Eingabe und prüft Erreichbarkeit sowie Sicherheitsheader.
-- Sobald eine feste Domain bekannt ist, sollte der Workflow zusätzlich einen
-  Zeitplan und diese URL als Standard erhalten.
+- Der Workflow `Availability` prüft `https://channieinifigge.uk/` alle
+  sechs Stunden sowie bei manueller Ausführung.
 
 ## Rollback
 

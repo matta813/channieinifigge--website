@@ -1,11 +1,14 @@
 name: Availability
 
 on:
+  schedule:
+    - cron: "41 */6 * * *"
   workflow_dispatch:
     inputs:
       url:
         description: Public production URL to verify
-        required: true
+        required: false
+        default: https://channieinifigge.uk
         type: string
 
 permissions:
@@ -21,7 +24,7 @@ jobs:
     steps:
       - name: Verify page and security headers
         env:
-          TARGET_URL: ${{ inputs.url }}
+          TARGET_URL: ${{ inputs.url || 'https://channieinifigge.uk' }}
         run: |
           headers=$(mktemp)
           trap 'rm -f "$headers"' EXIT

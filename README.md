@@ -11,7 +11,8 @@ Lo-Fi-Stream-Seite (YouTube-Embed), ausgeliefert von nginx.
 | `main.js`        | Zustimmungsbasierte YouTube-IFrame-API-Einbindung     |
 | `default.conf`   | nginx-Config: Security-Header, CSP, Favicon-Alias     |
 | `favicon.svg`    | Favicon (auch unter `/favicon.ico` ausgeliefert)      |
-| `robots.txt`     | Crawler-Freigabe                                      |
+| `robots.txt` / `sitemap.xml` | Suchmaschinen-Metadaten                |
+| `social-preview.png` | Open-Graph- und Twitter-Vorschaubild              |
 
 ## Lokal ausführen
 
@@ -30,7 +31,7 @@ Commit (Conventional Commits)
   → Tests + Commitlint + CodeQL
   → isoliertes semantic-release: SemVer-Bump, CHANGELOG, Tag und Release
   → Trivy: Image-Scan auf hohe und kritische Schwachstellen
-  → Buildx: GHCR-Image mit SBOM und Provenance
+  → Buildx: AMD64-/ARM64-GHCR-Image mit SBOM und Provenance
   → Dependabot: wöchentliche Updates für Actions, Docker und npm
   → FluxCD rollt die neue Version im Cluster aus
 ```
@@ -40,7 +41,9 @@ Commit (Conventional Commits)
   kein Release aus. `chore(deps):` erzeugt für ausgerollte
   Abhängigkeitsupdates automatisch einen Patch-Release.
 - **Runtime:** Der unprivilegierte Container lauscht auf Port **8080** (nginx).
+- **Produktion:** [https://channieinifigge.uk/](https://channieinifigge.uk/)
+- **Architekturen:** veröffentlichte Images unterstützen `linux/amd64` und
+  `linux/arm64`; beide Varianten werden vor dem Push separat gescannt.
 - **Betrieb und Rollback:** siehe [OPERATIONS.md](OPERATIONS.md).
-- **Verfügbarkeit:** Der manuelle GitHub-Actions-Workflow nimmt die
-  Produktions-URL als Eingabe; eine feste öffentliche Domain ist im
-  Repository derzeit nicht hinterlegt.
+- **Verfügbarkeit:** GitHub Actions prüft die Produktionsseite alle sechs
+  Stunden sowie bei manueller Ausführung.

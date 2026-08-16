@@ -8,6 +8,8 @@ COPY style.css /usr/share/nginx/html/style.css
 COPY main.js /usr/share/nginx/html/main.js
 COPY favicon.svg /usr/share/nginx/html/favicon.svg
 COPY robots.txt /usr/share/nginx/html/robots.txt
+COPY sitemap.xml /usr/share/nginx/html/sitemap.xml
+COPY social-preview.png /usr/share/nginx/html/social-preview.png
 
 EXPOSE 8080
 
