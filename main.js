@@ -5,7 +5,9 @@ let loadTimeout;
 let loadRequested = false;
 const videoId = "ruOoPMOsTZ4";
 const startButton = document.getElementById("start-stream");
+const stopButton = document.getElementById("stop-stream");
 const consent = document.getElementById("consent");
+const playerControls = document.getElementById("player-controls");
 const statusMessage = document.getElementById("status-message");
 
 function showLoadError() {
@@ -23,6 +25,24 @@ function showLoadError() {
     statusMessage.textContent = "Der Stream konnte nicht geladen werden. Prüfe deine Verbindung oder Inhaltsblocker und versuche es erneut.";
     startButton.disabled = false;
     startButton.textContent = "Erneut versuchen";
+}
+
+function stopStream() {
+    loadRequested = false;
+    clearTimeout(loadTimeout);
+    if (player?.destroy) {
+        player.destroy();
+    }
+    player = undefined;
+    document.getElementById("youtube-api")?.remove();
+    playerControls.hidden = true;
+    consent.hidden = false;
+    consent.classList.remove("is-loading", "is-error");
+    consent.setAttribute("aria-busy", "false");
+    statusMessage.textContent = "Die YouTube-Verbindung wurde beendet. Der Stream kann jederzeit erneut gestartet werden.";
+    startButton.disabled = false;
+    startButton.textContent = "Stream mit Ton starten 🔊";
+    startButton.focus();
 }
 
 function loadYouTubeApi() {
@@ -72,6 +92,7 @@ function onPlayerReady(event) {
     event.target.unMute();
     event.target.setVolume(80);
     consent.hidden = true;
+    playerControls.hidden = false;
     event.target.getIframe().focus();
 }
 
@@ -85,3 +106,5 @@ startButton.addEventListener("click", function () {
     consent.classList.add("is-loading");
     loadYouTubeApi();
 });
+
+stopButton.addEventListener("click", stopStream);

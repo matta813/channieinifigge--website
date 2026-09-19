@@ -28,6 +28,16 @@ test("failed YouTube loading can be retried", () => {
     assert.match(html, /aria-describedby="status-message"/);
 });
 
+test("the player remains usable and YouTube consent can be withdrawn", () => {
+    const css = fs.readFileSync("style.css", "utf8");
+    assert.doesNotMatch(css, /\.video-foreground\s*{[^}]*pointer-events:\s*none/s);
+    assert.match(html, /id="stop-stream"/);
+    assert.match(script, /function stopStream\(\)/);
+    assert.match(script, /player\.destroy\(\)/);
+    assert.match(script, /document\.getElementById\("youtube-api"\)\?\.remove\(\)/);
+    assert.match(script, /stopButton\.addEventListener\("click", stopStream\)/);
+});
+
 test("metadata and accessible page structure are present", () => {
     assert.match(html, /<html lang="de">/);
     assert.match(html, /<meta name="description"/);
