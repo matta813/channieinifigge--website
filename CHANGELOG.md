@@ -1,3 +1,5 @@
+## [1.5.0](https://github.com/matta813/channieinifigge--website/compare/v1.4.2...v1.5.0) (2026-09-19)
+
 ## [1.4.2](https://github.com/matta813/channieinifigge--website/compare/v1.4.1...v1.4.2) (2026-09-19)
 
 ## [1.4.1](https://github.com/matta813/channieinifigge--website/compare/v1.4.0...v1.4.1) (2026-09-19)
