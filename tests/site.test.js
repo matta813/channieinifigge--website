@@ -93,6 +93,9 @@ test("nginx sends security and cache headers", () => {
     }
     assert.match(nginx, /youtube-nocookie\.com/);
     assert.match(nginx, /expires 1h/);
+    assert.match(nginx, /gzip on;/);
+    assert.match(nginx, /gzip_vary on;/);
+    assert.match(nginx, /gzip_types text\/css application\/javascript application\/xml image\/svg\+xml;/);
     assert.match(nginx, /server_tokens off/);
     assert.match(nginx, /object-src 'none'/);
     assert.match(nginx, /form-action 'none'/);
