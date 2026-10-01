@@ -82,6 +82,12 @@ test("scripts remain external and the privacy-preserving embed is enforced", () 
     assert.match(script, /host: "https:\/\/www\.youtube-nocookie\.com"/);
 });
 
+test("Umami analytics is loaded and allowed by the CSP", () => {
+    assert.match(html, /<script defer src="https:\/\/umami\.scruzzi\.com\/script\.js" data-website-id="[0-9a-f-]{36}"><\/script>/);
+    assert.match(nginx, /script-src [^;]*https:\/\/umami\.scruzzi\.com/);
+    assert.match(nginx, /connect-src [^;]*https:\/\/umami\.scruzzi\.com/);
+});
+
 test("nginx sends security and cache headers", () => {
     for (const header of [
         "Content-Security-Policy",
