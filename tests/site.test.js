@@ -9,7 +9,10 @@ const script = fs.readFileSync("main.js", "utf8");
 const nginx = fs.readFileSync("default.conf", "utf8");
 const robots = fs.readFileSync("robots.txt", "utf8");
 const sitemap = fs.readFileSync("sitemap.xml", "utf8");
-const localAssets = [...html.matchAll(/(?:href|src)="\/([^"#?]+)"/g)].map((match) => match[1]);
+// Paths under /a/ are proxied to Umami by nginx and have no local file.
+const localAssets = [...html.matchAll(/(?:href|src)="\/([^"#?]+)"/g)]
+    .map((match) => match[1])
+    .filter((asset) => !asset.startsWith("a/"));
 
 test("YouTube is loaded only after explicit consent", () => {
     assert.match(html, /<button id="start-stream"/);
@@ -82,10 +85,12 @@ test("scripts remain external and the privacy-preserving embed is enforced", () 
     assert.match(script, /host: "https:\/\/www\.youtube-nocookie\.com"/);
 });
 
-test("Umami analytics is loaded and allowed by the CSP", () => {
-    assert.match(html, /<script defer src="https:\/\/umami\.scruzzi\.com\/script\.js" data-website-id="[0-9a-f-]{36}"><\/script>/);
-    assert.match(nginx, /script-src [^;]*https:\/\/umami\.scruzzi\.com/);
-    assert.match(nginx, /connect-src [^;]*https:\/\/umami\.scruzzi\.com/);
+test("Umami analytics is proxied first-party", () => {
+    assert.match(html, /<script defer src="\/a\/script\.js" data-website-id="[0-9a-f-]{36}"><\/script>/);
+    assert.doesNotMatch(html, /umami\.scruzzi\.com/);
+    assert.match(nginx, /location = \/a\/script\.js \{\s*proxy_pass https:\/\/umami\.scruzzi\.com\/script\.js;/);
+    assert.match(nginx, /location = \/a\/api\/send \{\s*proxy_pass https:\/\/umami\.scruzzi\.com\/api\/send;/);
+    assert.doesNotMatch(nginx, /-src [^;]*umami\.scruzzi\.com/);
 });
 
 test("nginx sends security and cache headers", () => {
