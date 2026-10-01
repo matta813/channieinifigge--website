@@ -14,6 +14,20 @@ geprüft. SBOM und Build-Provenance werden zusammen mit dem Image publiziert.
 - Der Workflow `Availability` kann `https://channieinifigge.uk/` manuell
   prüfen. GitHub-hosted Runner können durch die absichtliche Regionssperre
   HTTP 403 erhalten; deshalb ist kein automatischer Zeitplan aktiviert.
+- Analytics: `GET /a/script.js` muss HTTP 200 mit JavaScript liefern. Ein
+  404 bedeutet, dass noch ein altes Image läuft; ein 502/504, dass der
+  Container `umami.scruzzi.com` nicht erreicht.
+
+## Analytics (Umami-Proxy)
+
+nginx löst `umami.scruzzi.com` einmalig beim Start auf.
+
+- **IP der Umami-Instanz geändert:** `/a/script.js` liefert 502/504. Pod bzw.
+  Container neu starten, damit nginx den Hostnamen neu auflöst.
+- **DNS beim Start nicht verfügbar:** nginx startet nicht
+  (`host not found in upstream`). DNS im Cluster prüfen und neu starten.
+- **Umami nicht erreichbar:** Die Seite selbst bleibt funktionsfähig, es
+  werden nur keine Aufrufe gezählt.
 
 ## Rollback
 
