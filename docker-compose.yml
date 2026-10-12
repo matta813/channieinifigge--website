@@ -1,6 +1,6 @@
 services:
   website:
-    image: ghcr.io/matta813/channieinifigge--website:1.4.0
+    image: ghcr.io/matta813/channieinifigge--website:1.6.2
     build: .
     ports:
       - "8088:8080"

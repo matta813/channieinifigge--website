@@ -29,6 +29,21 @@ nginx löst `umami.scruzzi.com` einmalig beim Start auf.
 - **Umami nicht erreichbar:** Die Seite selbst bleibt funktionsfähig, es
   werden nur keine Aufrufe gezählt.
 
+## Cloudflare
+
+Zwei Punkte liegen außerhalb dieses Repos und müssen im Cloudflare-Dashboard
+behoben werden:
+
+- **Doppelter HSTS-Header:** nginx sendet `max-age=63072000; includeSubDomains`,
+  Cloudflare ergänzt `max-age=63072000; preload`. Die Einstellung unter
+  SSL/TLS → Edge Certificates → HSTS sollte beide Direktiven setzen, oder der
+  nginx-Header entfällt.
+- **JS Detections:** Cloudflare injiziert ein Inline-Script, das die CSP
+  (`script-src 'self'`) blockiert. Das erzeugt nur einen Konsolenfehler;
+  abschalten unter Security → Settings → JavaScript detections.
+- **Caching:** CSS und JS werden mit `Cache-Control: no-cache` ausgeliefert
+  (Revalidierung per ETag). Bilder werden eine Stunde gecacht.
+
 ## Rollback
 
 1. Im GitHub Release oder in GHCR das zuletzt funktionierende Image bestimmen.

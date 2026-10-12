@@ -111,3 +111,29 @@ test("nginx sends security and cache headers", () => {
     assert.match(nginx, /object-src 'none'/);
     assert.match(nginx, /form-action 'none'/);
 });
+
+test("player is letterboxed instead of cropped on narrow screens", () => {
+    const css = fs.readFileSync("style.css", "utf8");
+    assert.doesNotMatch(css, /min-width:\s*177/);
+    assert.match(css, /width:\s*min\(100vw, 177\.78vh\)/);
+    assert.match(css, /^noscript|,\s*noscript\s*{/m);
+});
+
+test("custom 404 page is shipped and wired into nginx", () => {
+    const notFound = fs.readFileSync("404.html", "utf8");
+    assert.match(notFound, /<meta name="robots" content="noindex">/);
+    assert.match(notFound, /href="\/"/);
+    assert.match(nginx, /error_page 404 \/404\.html;/);
+    assert.match(fs.readFileSync("Dockerfile", "utf8"), /COPY 404\.html/);
+});
+
+test("CSS and JS are revalidated while images stay cached", () => {
+    assert.match(nginx, /location ~\* \\\.\(\?:css\|js\)\$ \{\s*expires -1;/);
+    assert.match(nginx, /location ~\* \\\.\(\?:svg\|png\|txt\|xml\)\$ \{\s*expires 1h;/);
+});
+
+test("social metadata names the site consistently", () => {
+    assert.match(html, /property="og:site_name" content="Channie in Ifigge"/);
+    assert.match(html, /property="og:locale" content="de_DE"/);
+    assert.match(html, /property="og:title" content="Channie in Ifigge · Lo-Fi Stream"/);
+});
