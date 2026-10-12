@@ -10,6 +10,7 @@ Lo-Fi-Stream-Seite (YouTube-Embed), ausgeliefert von nginx.
 | `style.css`      | Styles (extern, damit CSP ohne `unsafe-inline` geht)  |
 | `main.js`        | Zustimmungsbasierte YouTube-IFrame-API-Einbindung     |
 | `default.conf`   | nginx-Config: Security-Header, CSP, Favicon-Alias, Umami-Proxy |
+| `404.html`       | Eigene Fehlerseite (nginx `error_page`)               |
 | `favicon.svg`    | Favicon (auch unter `/favicon.ico` ausgeliefert)      |
 | `robots.txt` / `sitemap.xml` | Suchmaschinen-Metadaten                |
 | `social-preview.png` | Open-Graph- und Twitter-Vorschaubild              |

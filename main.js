@@ -4,6 +4,7 @@ let player;
 let loadTimeout;
 let loadRequested = false;
 const videoId = "ruOoPMOsTZ4";
+const startLabel = "Stream mit Ton starten 🔊";
 const startButton = document.getElementById("start-stream");
 const stopButton = document.getElementById("stop-stream");
 const consent = document.getElementById("consent");
@@ -41,7 +42,7 @@ function stopStream() {
     consent.setAttribute("aria-busy", "false");
     statusMessage.textContent = "Die YouTube-Verbindung wurde beendet. Der Stream kann jederzeit erneut gestartet werden.";
     startButton.disabled = false;
-    startButton.textContent = "Stream mit Ton starten 🔊";
+    startButton.textContent = startLabel;
     startButton.focus();
 }
 

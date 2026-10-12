@@ -4,6 +4,7 @@ FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:ed04ec1ff34502c339ee5c3ae3
 COPY default.conf /etc/nginx/conf.d/default.conf
 
 COPY index.html /usr/share/nginx/html/index.html
+COPY 404.html /usr/share/nginx/html/404.html
 COPY style.css /usr/share/nginx/html/style.css
 COPY main.js /usr/share/nginx/html/main.js
 COPY favicon.svg /usr/share/nginx/html/favicon.svg
